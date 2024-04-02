@@ -17,14 +17,14 @@ public class MainManager : MonoBehaviour
     private int m_Points;
     
     private bool m_GameOver = false;
-
+    [SerializeField] private Text upText;
     
     // Start is called before the first frame update
     void Start()
     {
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
-        
+        upText.text = DataPlayer.instance.playerName +" best score: "+DataPlayer.instance.scorePalyer;
         int[] pointCountArray = new [] {1,1,2,2,5,5};
         for (int i = 0; i < LineCount; ++i)
         {
@@ -57,7 +57,12 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                if (DataPlayer.instance.scorePalyer<m_Points)
+                {
+                    DataPlayer.instance.scorePalyer = m_Points;
+                }
+                DataPlayer.instance.SaveAll();
+                SceneManager.LoadScene(0);
             }
         }
     }
@@ -65,7 +70,7 @@ public class MainManager : MonoBehaviour
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        ScoreText.text = $"{DataPlayer.instance.playerName} Score : {m_Points}";
     }
 
     public void GameOver()
